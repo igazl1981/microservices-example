@@ -1,4 +1,4 @@
-package com.example.microservices.reader.controller.model;
+package com.example.microservices.reader.web.model;
 
 public record Employee(
         Long id,

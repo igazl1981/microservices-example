@@ -1,13 +1,23 @@
 
 spring:
   application:
-    name: datasource-service
+    # set the name which the service will be registered into eureka and zipkin
+    name: data-reader-service
 
+# set defaultZone to find the eureka service
 eureka:
   client:
     service-url:
       defaultZone: "http://localhost:8765/eureka/"
 
+feign:
+  client.config.default.loggerLevel: FULL
+
+logging:
+  level:
+    com.example.microservices.reader.client: DEBUG
+
+# Enable eureka for FeignClient
 ribbon:
   eureka:
     enabled: true

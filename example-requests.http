@@ -8,3 +8,11 @@ http://localhost:8082/employees
 # using feign client and eureka
 
 http://localhost:8080/read/employees/feign
+
+
+###
+
+# Reading all employees with data-reader-service which calls datasource-service
+# using http client
+
+http://localhost:8080/read/employees/http-client

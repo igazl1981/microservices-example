@@ -1,6 +1,7 @@
 package com.example.microservices.datasource.web;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.microservices.datasource.service.EmployeeService;
 import com.example.microservices.datasource.service.model.Employee;
@@ -8,6 +9,7 @@ import com.example.microservices.datasource.service.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +26,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> allEmployees() {
+    public List<Employee> allEmployees(@RequestHeader Map<String, String> headers) {
         LOGGER.info("Finding all employees");
         return employeeService.getAll();
     }

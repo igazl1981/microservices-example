@@ -1,6 +1,6 @@
-package com.example.microservices.reader.controller.model.transform;
+package com.example.microservices.reader.web.model.transform;
 
-import com.example.microservices.reader.controller.model.Employee;
+import com.example.microservices.reader.web.model.Employee;
 
 import org.springframework.stereotype.Component;
 
