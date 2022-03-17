@@ -1,0 +1,28 @@
+
+server:
+  port: 8754
+
+spring:
+  application:
+    name: zuul-gateway
+
+management:
+  security.enabled: false
+  endpoints.web.exposure.include: '*'
+
+logging:
+  level:
+    com.netflix: DEBUG
+
+
+eureka:
+  instance.preferIpAddress: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: "http://localhost:8765/eureka/"
+
+zuul:
+  debug:
+    request: true

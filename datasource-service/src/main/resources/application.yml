@@ -1,0 +1,33 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: datasource-service
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3307/example
+    username: root
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+      naming:
+#         Adding to be able to use camelCase column names and get the name from the @Column value
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+# Setting actuator security off and expose all endpoints
+# !!!!!!!!!!!!! Shouldn't do it on production
+# Set to a different port that the normal endpoints
+# Set up some username and password
+# narrow down the exposed endpoints to the necessary minimum
+management:
+  security.enabled: false
+  endpoints.web.exposure.include: '*'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8765/eureka/"

@@ -1,0 +1,13 @@
+
+spring:
+  application:
+    name: datasource-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8765/eureka/"
+
+ribbon:
+  eureka:
+    enabled: true

@@ -1,0 +1,14 @@
+
+server:
+  port: 8765
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8765/eureka
+
+

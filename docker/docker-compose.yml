@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: example
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/sample-data.sql:/docker-entrypoint-initdb.d/sample-data.sql
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  graphite:
+    image: graphiteapp/graphite-statsd
+    ports:
+      - 2003:2003
+      - 8010:8080
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+#    volumes:
+#      - grafana-storage:/var/lib/grafana
