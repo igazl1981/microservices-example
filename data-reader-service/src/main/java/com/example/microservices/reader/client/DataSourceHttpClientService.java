@@ -18,10 +18,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.TraceContext;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class DataSourceHttpClientService {
@@ -31,11 +35,13 @@ public class DataSourceHttpClientService {
     private final ObjectMapper objectMapper;
     private final Tracer tracer;
     private final HttpClient httpClient;
+    private final DiscoveryClient discoveryClient;
 
-    public DataSourceHttpClientService(ObjectMapper objectMapper, Tracer tracer, HttpClient httpClient) {
+    public DataSourceHttpClientService(ObjectMapper objectMapper, Tracer tracer, HttpClient httpClient, DiscoveryClient discoveryClient) {
         this.objectMapper = objectMapper;
         this.tracer = tracer;
         this.httpClient = httpClient;
+        this.discoveryClient = discoveryClient;
     }
 
     public Optional<List<Employee>> getAllEmployees() {
@@ -48,13 +54,7 @@ public class DataSourceHttpClientService {
 
         Map<String, String> copyOfContextMap = MDC.getCopyOfContextMap();
         try {
-            return httpClient
-                    .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString())
-                    .thenApply(HttpResponse::body)
-                    .thenApply(this::deserializeBody)
-                    .thenApply(Optional::ofNullable)
-                    .thenApply(employees -> logSizesWithFixedMdc(employees, copyOfContextMap))
-                    .get();
+            return httpClient.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenApply(this::deserializeBody).thenApply(Optional::ofNullable).thenApply(employees -> logSizesWithFixedMdc(employees, copyOfContextMap)).get();
         } catch (ExecutionException | InterruptedException e) {
             LOGGER.error("Failed to call datasource-service", e);
             throw new RuntimeException("Failed to call datasource-service");
@@ -73,19 +73,24 @@ public class DataSourceHttpClientService {
         Optional<TraceContext> traceContext = getTraceContext();
         var httpRequestBuilder = HttpRequest.newBuilder(getDatasourceServiceUri());
         traceContext.map(TraceContext::traceId).ifPresent(traceId -> httpRequestBuilder.header("X-B3-TraceId", traceId));
-//        traceContext.map(TraceContext::spanId).ifPresent(spanId -> httpRequestBuilder.header("X-B3-SpanId", tracer.nextSpan().context().spanId()));
         traceContext.map(TraceContext::traceId).ifPresent(traceId -> httpRequestBuilder.header("X-B3-ParentSpanId", traceId));
         traceContext.map(TraceContext::sampled).ifPresent(sampled -> httpRequestBuilder.header("X-B3-Sampled", sampled.toString()));
         return httpRequestBuilder.build();
     }
 
     private URI getDatasourceServiceUri() {
-        try {
-            return new URI("http://localhost:8082/employees");
-        } catch (URISyntaxException e) {
-            LOGGER.error("Failed to create URI", e);
-            throw new RuntimeException("Failed to create DatasourceService URL");
-        }
+        URI uriFromDiscovery = getUriFromDiscovery();
+        return composeDatasourceUri(uriFromDiscovery);
+    }
+
+    private URI getUriFromDiscovery() {
+        return discoveryClient.getInstances("datasource-service").stream().findFirst().map(ServiceInstance::getUri).orElseThrow(() -> new IllegalStateException("No instance found for datasource-service"));
+    }
+
+    private URI composeDatasourceUri(URI uriFromDiscovery) {
+        return UriComponentsBuilder.fromUri(uriFromDiscovery)
+                .path("/employees")
+                .build().toUri();
     }
 
     private Optional<TraceContext> getTraceContext() {
