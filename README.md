@@ -72,6 +72,8 @@ Using `spring-cloud-starter-netflix-zuul` needs Spring Boot 2.3.7 because this p
 
 Required annotation is `@EnableZuulProxy` for enabling the Zuul proxy.
 
+For custom setup with Eureka and without it check the [application.yml](./gateway-zuul/src/main/resources/application.yml) and the `zuul.routes` setup.
+
 ### With Eureka
 
 To use eureka for automatic mapping of registered services have to add `spring-cloud-starter-netflix-eureka-client` dependency and set `eureka.client.fetchRegistry: true`.
