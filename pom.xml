@@ -23,6 +23,7 @@
         <module>datasource-service</module>
         <module>discovery-server</module>
         <module>gateway-zuul</module>
+        <module>gateway-cloud</module>
     </modules>
 
     <build>

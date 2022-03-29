@@ -34,3 +34,27 @@ http://localhost:8754/reader/read/employees/http-client
 # Reading all employees through Zuul proxy and HttpClient using Zuul's custom set route with serviceId pointing to a service in eureka
 
 http://localhost:8754/reader-discovery/read/employees/http-client
+
+###
+
+# Reading all employees through Spring Cloud gateway using route configured by Java Config class
+
+http://localhost:8854/reader-java-config/read/employees/http-client
+
+###
+
+# Reading all employees through Spring Cloud gateway using route configured by Yaml Config
+
+http://localhost:8854/reader-yaml-config/read/employees/http-client
+
+###
+
+# Reading all employees through Spring Cloud gateway using route configuration based on Discovery Service
+
+http://localhost:8854/reader-discovery-config/read/employees/http-client
+
+###
+
+# Reading all employees through Spring Cloud gateway using route configuration based on Discovery Service
+
+http://localhost:8854/DATA-READER-SERVICE/read/employees/http-client

@@ -74,7 +74,31 @@ Required annotation is `@EnableZuulProxy` for enabling the Zuul proxy.
 
 For custom setup with Eureka and without it check the [application.yml](./gateway-zuul/src/main/resources/application.yml) and the `zuul.routes` setup.
 
+Available routes are found on the [Gateway's actuator page](http://localhost:8754/actuator/routes)
+
 ### With Eureka
 
 To use eureka for automatic mapping of registered services have to add `spring-cloud-starter-netflix-eureka-client` dependency and set `eureka.client.fetchRegistry: true`.
 
+## Spring Cloud Gateway
+
+> Spring MVC found on classpath, which is incompatible with Spring Cloud Gateway.
+
+The Gateway is by default using reactive programming and if the `spring-boot-starter-web` is also used in the project the `spring.main.web-application-type=reactive` has to be set or remove `spring-boot-starter-web`.
+
+Available routes are found on the [Gateway's actuator page](http://localhost:8854/actuator/gateway/routes)
+
+The configuration can be in a [Configuration class](./gateway-cloud/src/main/java/com/example/microservices/gateway/cloud/config/RouteConfiguration.java) and in the [application.yml](./gateway-cloud/src/main/resources/application.yml) 's `spring.cloud.gateway.routes` node.
+
+For more setups use [Spring Cloud Gateway reference](https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/).
+
+
+### With Eureka
+
+Gateway is able to use Discovery Servers to expose routes.
+
+For this the `spring.cloud.gateway.discovery.locator.enabled: true` has to be enabled and need to add `spring-cloud-starter-netflix-eureka-client` dependency.
+
+> Some documentation says `@EnableEurekaClient` is also required but it's not necessary.
+
+The routes are automatically set for the services from the Discovery Server with the `/<service-name>/**` and it is possible to use the service names in custom routes with `uri: lb://<service-name>` setup.    
