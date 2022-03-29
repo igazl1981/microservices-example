@@ -6,6 +6,10 @@ spring:
     # set the name which the service will be registered into eureka and zipkin
     name: data-reader-service
 
+management:
+  security.enabled: false
+  endpoints.web.exposure.include: '*'
+
 # set defaultZone to find the eureka service
 eureka:
   client:
