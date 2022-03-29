@@ -66,3 +66,13 @@ It is a default Eureka server which requires the `spring-cloud-starter-netflix-e
 
 Eureka is started on a custom port with `eureka.client.service-url.defaultZone` setting.
 
+## Zuul with Spring boot
+
+Using `spring-cloud-starter-netflix-zuul` needs Spring Boot 2.3.7 because this project became Spring Gateway.
+
+Required annotation is `@EnableZuulProxy` for enabling the Zuul proxy.
+
+### With Eureka
+
+To use eureka for automatic mapping of registered services have to add `spring-cloud-starter-netflix-eureka-client` dependency and set `eureka.client.fetchRegistry: true`.
+

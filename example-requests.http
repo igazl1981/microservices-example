@@ -16,3 +16,21 @@ http://localhost:8081/read/employees/feign
 # using http client
 
 http://localhost:8081/read/employees/http-client
+
+###
+
+# Reading all employees through Zuul proxy and HttpClient
+
+http://localhost:8754/data-reader-service/read/employees/http-client
+
+###
+
+# Reading all employees through Zuul proxy and HttpClient using Zuul's custom set route
+
+http://localhost:8754/reader/read/employees/http-client
+
+###
+
+# Reading all employees through Zuul proxy and HttpClient using Zuul's custom set route with serviceId pointing to a service in eureka
+
+http://localhost:8754/reader-discovery/read/employees/http-client

@@ -18,7 +18,6 @@ logging:
 eureka:
   instance.preferIpAddress: true
   client:
-    registerWithEureka: true
     fetchRegistry: true
     service-url:
       defaultZone: "http://localhost:8765/eureka/"
@@ -26,3 +25,14 @@ eureka:
 zuul:
   debug:
     request: true
+  # setting global prefix
+  #prefix: /read/
+  routes:
+    reader:
+      path: /reader/**
+      url: http://localhost:8081/
+      # Set stripPrefix to false if the prefix should not be stripped. This has effect on zuul.prefix not on the path
+      # stripPrefix: false
+    reader-discovery:
+      path: /reader-discovery/**
+      serviceId: data-reader-service
